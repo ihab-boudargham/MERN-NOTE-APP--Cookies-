@@ -1,5 +1,7 @@
 # A - BACKEND
 
+## A.1 - Setting the Environment and Installing Libraries
+
 1. Create package.json file
    npm init -y
 2. Set typescript
@@ -20,3 +22,13 @@
 11. npx eslint . --ext .ts , to check for problems in the selected file
 12. Add "lint": "eslint . --ext .ts" to scripts so that we can use directly npm run lint
 13. install the pluggin ESLInt
+
+## A.2 - Setting MongoDB and Mongoose Setup
+
+1. Create our cluster
+2. .env file to write the DATABASE_URL and the PORT.
+3. npm i dotenv
+4. npm i mongoose
+5. import .env and mongoose in server.ts
+6. Connect mongoose.
+7. Keep in mind that it returns a promise so after that we should define what will hapen next, like starting and listening up to the server, so we use .then(()=>{}) incase everything run succesfully. After that we should add .catch() to return the error.
