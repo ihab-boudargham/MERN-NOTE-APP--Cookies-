@@ -35,3 +35,8 @@
 8. npm i envalid.
    If we didnt provide the server with a port, the server will run on an undefined port which is dangerous.
    For this reason we use cleanEnv from envalid and we pass through it all the important information regarding the URL and Port in validateEnv.ts in util. So we can get rid of writing process.env and instead write .env
+
+## A.3 - MongoDB Model setup
+
+1. Crate the note model in models.
+2. create a schema for our notes wich each contains a title and a text and timestamps. then we created the typescript for our model and finally exported it.

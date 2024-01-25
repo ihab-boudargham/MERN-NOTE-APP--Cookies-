@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import express from 'express';
+import NoteModel from './models/note';
 
 const app = express();
 
