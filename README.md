@@ -40,3 +40,17 @@
 
 1. Crate the note model in models.
 2. create a schema for our notes wich each contains a title and a text and timestamps. then we created the typescript for our model and finally exported it.
+3. in app.ts we will have all of our endpints
+4. get the notes of our database and return them using app.get
+   app.get('/', async (req,res) => {
+   try {
+   // if it was able to get them, get them by json(notes)
+   const notes = await Notemodel.find().exec()
+   res.status(200).json(notes)
+
+   } catch (error) {
+   // if it coudnt get them
+   console.error(error);
+   res.status(500)
+   }
+   })
