@@ -1,13 +1,7 @@
+import app from './app';
 import 'dotenv/config';
 import mongoose from 'mongoose';
-import express from 'express';
 import env from './util/validateEnv';
-
-const app = express();
-
-app.get('/', (req, res) => {
-  res.send('hello, world');
-});
 
 const port = env.PORT;
 
