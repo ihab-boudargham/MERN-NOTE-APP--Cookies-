@@ -32,3 +32,6 @@
 5. import .env and mongoose in server.ts
 6. Connect mongoose.
 7. Keep in mind that it returns a promise so after that we should define what will hapen next, like starting and listening up to the server, so we use .then(()=>{}) incase everything run succesfully. After that we should add .catch() to return the error.
+8. npm i envalid.
+   If we didnt provide the server with a port, the server will run on an undefined port which is dangerous.
+   For this reason we use cleanEnv from envalid and we pass through it all the important information regarding the URL and Port in validateEnv.ts in util. So we can get rid of writing process.env and instead write .env

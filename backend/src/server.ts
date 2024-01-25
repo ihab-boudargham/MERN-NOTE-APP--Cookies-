@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import mongoose from 'mongoose';
 import express from 'express';
+import env from './util/validateEnv';
 
 const app = express();
 
@@ -8,11 +9,11 @@ app.get('/', (req, res) => {
   res.send('hello, world');
 });
 
-const port = process.env.PORT;
+const port = env.PORT;
 
 // connect returns a promise like async functions, so after that we should define what happens next
 mongoose
-  .connect(process.env.MONGO_CONNECTION_STRING!)
+  .connect(env.MONGO_CONNECTION_STRING)
   .then(() => {
     console.log('Mongoose connected');
 
