@@ -81,3 +81,11 @@
 
 1. npm i http-errors
 2. npm i -D @types/http-errors
+
+# B - Frontend
+
+## B.1 Create React
+
+1. npx create-react-app frontend --template typescript
+2. npm install react-bootstrap bootstrap
+3. import 'bootstrap/dist/css/bootstrap.min.css'; in index.tsx

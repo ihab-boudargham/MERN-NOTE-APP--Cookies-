@@ -12,6 +12,7 @@ app.use(express.json());
 
 app.use('/api/notes', notesRoutes);
 
+// check our server
 app.use((req, res, next) => {
   next(createHttpError(404, 'Endpoint not found'));
 });
