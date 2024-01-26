@@ -78,3 +78,6 @@
    POST /api/notes 201 154.958 ms - 137
 
 ## A.5 Error handling
+
+1. npm i http-errors
+2. npm i -D @types/http-errors
