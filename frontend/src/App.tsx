@@ -1,21 +1,28 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
-import { Button } from 'react-bootstrap';
+import { Note } from './models/note';
 
 function App() {
-  const [clickCount, setClickCount] = useState(0);
-  return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <Button onClick={() => setClickCount(clickCount + 1)}>
-          Clicked {clickCount} times.
-        </Button>
-      </header>
-    </div>
-  );
+  const [notes, setNotes] = useState<Note[]>([]);
+
+  useEffect(() => {
+    async function loadNotes() {
+      try {
+        const response = await fetch('/api/notes', {
+          method: 'GET',
+        });
+
+        const notes = await response.json();
+        setNotes(notes);
+      } catch (error) {
+        console.error(error);
+        alert(error);
+      }
+    }
+    loadNotes();
+  }, []);
+
+  return <div className="App">{JSON.stringify(notes)}</div>;
 }
 
 export default App;

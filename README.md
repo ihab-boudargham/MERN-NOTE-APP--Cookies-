@@ -89,3 +89,31 @@
 1. npx create-react-app frontend --template typescript
 2. npm install react-bootstrap bootstrap
 3. import 'bootstrap/dist/css/bootstrap.min.css'; in index.tsx
+
+## B.2 Fetch Notes
+
+1.  Create folder models: note.ts, where we should state the shape and interface of each note
+2.  in app.tsx, insert:
+
+    1.  const [notes, setNotes] = useState<Note[]>([]);
+        Note[]: is the type of the useState from note.ts
+    2.  to load the notes one time when the app starts, we use useEffect, in the useEffect: 1. first we need to fetch the local host of all notes
+        const response = await fetch('/api/notes', {method: 'GET',});
+        Here, we took out http://localhost:5000, adn save in package.json as a proxy. So that we allow the connecton of the 2 different hosts. 2. to get the notes we use json:
+        const notes = await response.json();
+        setNotes(notes); 3. because we are using await we need an async function for that plus error handling:
+        useEffect(() => {
+        async function loadNotes() {
+        try {
+        const response = await fetch('/api/notes', {
+        method: 'GET',
+        });
+        const notes = await response.json();
+        setNotes(notes);
+        } catch (error) {
+        console.error(error);
+        alert(error);
+        }
+        }
+        loadNotes();
+        }, []);
