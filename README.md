@@ -117,3 +117,18 @@
         }
         loadNotes();
         }, []);
+
+3.  We created 2 folders:
+4.  Componenets: Note.tsx, html for the note, useing the interface:
+    interface NoteProps {
+    note: NoteModel;
+    }
+5.  models: note.ts,
+    export interface Note {
+    \_id: string;
+    title: string;
+    text?: string;
+    createdAt: string;
+    updatedAt: string;
+    }
+6.  created separtae folders for styling , global and for the note
