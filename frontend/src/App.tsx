@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Note as NoteModel } from './models/note';
 import Note from './components/Note';
+import { Col, Container, Row } from 'react-bootstrap';
+import styles from './styles/NotePages.module.css';
 
 function App() {
   const [notes, setNotes] = useState<NoteModel[]>([]);
@@ -23,11 +25,15 @@ function App() {
   }, []);
 
   return (
-    <div>
-      {notes.map((note) => (
-        <Note note={note} key={note._id} />
-      ))}
-    </div>
+    <Container>
+      <Row xs={1} md={2} xl={3} className="g-4">
+        {notes.map((note) => (
+          <Col key={note._id}>
+            <Note note={note} className={styles.note} />
+          </Col>
+        ))}
+      </Row>
+    </Container>
   );
 }
 
