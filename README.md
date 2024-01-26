@@ -54,3 +54,27 @@
    res.status(500)
    }
    })
+
+5. Instead of repating the catching error we can use app.use((error: unknown, req: Request, res: Response, next: NextFunction) => { }
+
+## A.4 Routes
+
+1. In app.ts, we arent going to write the whole code instead:
+   app.use('/api/notes', RouteComponent)
+   and the RouteComponenets takes the fucntion:
+   router.get('/', NotesController.getNotes);
+   and the NotesController has the async function
+
+2. Now to Post a note:
+
+   1. First, app.use(express.json());, this means that the body can accept json from us
+   2. it needs three parts:
+      1. request from body what will be added
+      2. try { the function of NoteModels.create(title, text)} and respond the note using.json
+      3. catch(error) {next(error)}
+
+3. npm i morgan
+   npm i --save-dev @types/morgan, to show in the terminal what have we run on postamn, like:
+   POST /api/notes 201 154.958 ms - 137
+
+## A.5 Error handling
