@@ -1,27 +1,43 @@
 // sfc
-
 import { Button, Form, Modal, ModalFooter } from 'react-bootstrap';
 import { Note } from '../models/note';
 import { NoteInput } from '../network/notes_api';
 import { useForm } from 'react-hook-form';
 import * as NotesApi from '../network/notes_api';
 
-interface AddNoteDialagProps {
+interface AddEditNoteDialagProps {
+  noteToEdit?: Note;
   onDismiss: () => void;
   onNoteSaved: (note: Note) => void;
 }
 
-const AddNoteDialog = ({ onDismiss, onNoteSaved }: AddNoteDialagProps) => {
+// TODO
+const AddNoteDialog = ({
+  noteToEdit,
+  onDismiss,
+  onNoteSaved,
+}: AddEditNoteDialagProps) => {
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<NoteInput>();
+  } = useForm<NoteInput>({
+    defaultValues: {
+      title: noteToEdit?.title || '',
+      text: noteToEdit?.text || '',
+    },
+  });
 
-  //   the handle submit function
+  // the handle submit function
   async function onSubmit(input: NoteInput) {
     try {
-      const noteResponse = await NotesApi.createNote(input);
+      let noteResponse: Note;
+      if (noteToEdit) {
+        noteResponse = await NotesApi.updateNote(noteToEdit._id, input);
+      } else {
+        noteResponse = await NotesApi.createNote(input);
+      }
+
       onNoteSaved(noteResponse);
     } catch (error) {
       console.error(error);
@@ -32,10 +48,11 @@ const AddNoteDialog = ({ onDismiss, onNoteSaved }: AddNoteDialagProps) => {
   return (
     <Modal show onHide={onDismiss}>
       <Modal.Header closeButton>
-        <Modal.Title>Add Note</Modal.Title>
+        <Modal.Title>{noteToEdit ? 'Edit Note' : 'Add Note'}</Modal.Title>
       </Modal.Header>
+
       <Modal.Body>
-        <Form id="addNoteForm" onSubmit={handleSubmit(onSubmit)}>
+        <Form id="addEditNoteForm" onSubmit={handleSubmit(onSubmit)}>
           <Form.Group className="mb-3">
             <Form.Label>Title</Form.Label>
             <Form.Control
@@ -51,14 +68,19 @@ const AddNoteDialog = ({ onDismiss, onNoteSaved }: AddNoteDialagProps) => {
 
           <Form.Group>
             <Form.Label>Text</Form.Label>
-            <Form.Control as="textarea" rows={5} placeholder="Text" />
+            <Form.Control
+              as="textarea"
+              rows={5}
+              placeholder="Text"
+              {...register('text')}
+            />
           </Form.Group>
         </Form>
       </Modal.Body>
 
       <ModalFooter>
         {/* it is important tp coonnet the submit button wth the form */}
-        <Button type="submit" form="addNoteForm" disabled={isSubmitting}>
+        <Button type="submit" form="addEditNoteForm" disabled={isSubmitting}>
           Save
         </Button>
       </ModalFooter>

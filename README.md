@@ -159,14 +159,15 @@
 
 8.  npm install react-icons --save
 
-9.  Create Delete note from front end
+9.  Create Delete note from frontend
+
     1.  Get api : notes_api.ts
         export async function deleteNote(noteId: string) {
         await fetchData('/api/notes/' + noteId, {
         method: 'DELETE',
         });
         }
-    2.  Define the deleteNote function in th app.tsx by calling the delete api from note_api.ts, where the states are present.
+    2.  Define the deleteNote function in the app.tsx by calling the delete api from note_api.ts, where the states are present.
         async function deleteNote(note: NoteModel) {
         try {
         await NotesApi.deleteNote(note.\_id);
@@ -176,9 +177,61 @@
         alert(error);
         }
         }
-    3.  in Note.tsx, wehere we have the not form which incude the trash icon we define:
+    3.  in Note.tsx, wehere we have the note form which incude the trash icon we define:
         onClick={(e) => {
         onDeleteNoteClicked(note);
         e.stopPropagation();
         }}
     4.  then add it as a props in App.tsx
+
+10. Create Update note from frontend 1. we need another entry in our note_api:
+    export async function updateNote(
+    noteId: string,
+    note: NoteInput
+    ): Promise<Note> {
+    const response = await fetchData('/api/notes/' + noteId, {
+    method: 'PATCH',
+    // headers beacuse we will send json data
+    headers: {
+    'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(note),
+    });
+    return response.json();
+    } 2. we will update the addNote function:
+    we adjust the submit button to take 2 functions: submit new note and update editted notes.
+    async function onSubmit(input: NoteInput) {
+    try {
+    let noteResponse: Note;
+    if (noteToEdit) {
+    noteResponse = await NotesApi.updateNote(noteToEdit.\_id, input);
+    } else {
+    noteResponse = await NotesApi.createNote(input);
+    }
+
+          onNoteSaved(noteResponse);
+        } catch (error) {
+          console.error(error);
+          alert(error);
+        }
+
+    }
+
+11. now we need to catch it , so whenever we click on any note the form muct appear: onNoteClicked
+    {noteToEdit && (
+    <AddEditNoteDialog
+    noteToEdit={noteToEdit}
+    onDismiss={() => setNoteToEdit(null)}
+    onNoteSaved={(updatedNote) => {
+    // takes the existing note , check for the ids , if true map teh updated Note otherwise map the existing Note
+    setNotes(
+    notes.map((existingNote) =>
+    existingNote.\_id === updatedNote.\_id
+    ? updatedNote
+    : existingNote
+    )
+    );
+    setNoteToEdit(null);
+    }}
+    />
+    )}

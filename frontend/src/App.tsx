@@ -4,12 +4,13 @@ import Note from './components/Note';
 import { Button, Col, Container, Row } from 'react-bootstrap';
 import styles from './styles/NotePages.module.css';
 import * as NotesApi from './network/notes_api';
-import AddNoteDialog from './components/AddNoteDialag';
+import AddEditNoteDialog from './components/AddEditNoteDialag';
 import styleUtils from './styles/utils.module.css';
 
 function App() {
   const [notes, setNotes] = useState<NoteModel[]>([]);
   const [showAddNoteDialog, setShowAddNoteDialog] = useState(false);
+  const [noteToEdit, setNoteToEdit] = useState<NoteModel | null>(null);
 
   useEffect(() => {
     async function loadNotes() {
@@ -49,6 +50,7 @@ function App() {
             <Note
               note={note}
               className={styles.note}
+              onNoteClicked={(note) => setNoteToEdit(note)}
               onDeleteNoteClicked={deleteNote}
             />
           </Col>
@@ -57,11 +59,29 @@ function App() {
 
       {/* On submit for the note form to dispaaear and add a new note */}
       {showAddNoteDialog && (
-        <AddNoteDialog
+        <AddEditNoteDialog
           onDismiss={() => setShowAddNoteDialog(false)}
           onNoteSaved={(newNote) => {
             setNotes([...notes, newNote]);
             setShowAddNoteDialog(false);
+          }}
+        />
+      )}
+
+      {noteToEdit && (
+        <AddEditNoteDialog
+          noteToEdit={noteToEdit}
+          onDismiss={() => setNoteToEdit(null)}
+          onNoteSaved={(updatedNote) => {
+            // takes the existing note , check for the ids , if true map teh updated Note otherwise map the existing Note
+            setNotes(
+              notes.map((existingNote) =>
+                existingNote._id === updatedNote._id
+                  ? updatedNote
+                  : existingNote
+              )
+            );
+            setNoteToEdit(null);
           }}
         />
       )}
