@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import express, { NextFunction, Request, Response } from 'express';
 import notesRoutes from './routes/notesRoutes';
+import usersRoutes from './routes/notesRoutes';
 import morgan from 'morgan';
 import createHttpError, { isHttpError } from 'http-errors';
 
@@ -10,6 +11,7 @@ app.use(morgan('dev'));
 
 app.use(express.json());
 
+app.use('/api/users', usersRoutes);
 app.use('/api/notes', notesRoutes);
 
 // check our server

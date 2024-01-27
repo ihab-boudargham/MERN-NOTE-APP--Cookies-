@@ -240,3 +240,7 @@
 
 1. npm i bcrypt
 2. npm i -D @types/bcrypt
+3. Create a userSchema in models
+4. Create usersRoutes.ts
+5. Create UserContoller.ts
+6. in app.ts, app.use('/api/users', usersRoutes);
