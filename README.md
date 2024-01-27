@@ -156,3 +156,29 @@
         )}
 
     4.  npm i react-hook-form
+
+8.  npm install react-icons --save
+
+9.  Create Delete note from front end
+    1.  Get api : notes_api.ts
+        export async function deleteNote(noteId: string) {
+        await fetchData('/api/notes/' + noteId, {
+        method: 'DELETE',
+        });
+        }
+    2.  Define the deleteNote function in th app.tsx by calling the delete api from note_api.ts, where the states are present.
+        async function deleteNote(note: NoteModel) {
+        try {
+        await NotesApi.deleteNote(note.\_id);
+        setNotes(notes.filter((existingNote) => existingNote.\_id !== note.\_id));
+        } catch (error) {
+        console.error(error);
+        alert(error);
+        }
+        }
+    3.  in Note.tsx, wehere we have the not form which incude the trash icon we define:
+        onClick={(e) => {
+        onDeleteNoteClicked(note);
+        e.stopPropagation();
+        }}
+    4.  then add it as a props in App.tsx
