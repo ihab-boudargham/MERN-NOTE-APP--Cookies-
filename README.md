@@ -132,3 +132,27 @@
     updatedAt: string;
     }
 6.  created separtae folders for styling , global and for the note
+
+7.  To create th add button functionality
+
+    1.  We define the post methode in notes_api:
+        export async function createNote(note: NoteInput): Promise<Note> {
+        const response = await fetchData('/api/notes', {
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(note),
+        });
+        return response.json();
+        }
+    2.  We create the componenent: AddNoteDialog.
+    3.  In the app.tsx:
+        <Button onClick={() => setShowAddNoteDialog(true)}>Add new Note</Button>
+
+              {showAddNoteDialog && (
+             <AddNoteDialog onDismiss={() => setShowAddNoteDialog} />
+
+        )}
+
+    4.  npm i react-hook-form
