@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Note as NoteModel } from './models/note';
 import Note from './components/Note';
-import { Button, Col, Container, Row } from 'react-bootstrap';
+import { Button, Col, Container, Row, Spinner } from 'react-bootstrap';
 import styles from './styles/NotePages.module.css';
 import * as NotesApi from './network/notes_api';
 import AddEditNoteDialog from './components/AddEditNoteDialag';
@@ -9,17 +9,24 @@ import styleUtils from './styles/utils.module.css';
 
 function App() {
   const [notes, setNotes] = useState<NoteModel[]>([]);
+  const [notesloading, setNotesLoading] = useState(true);
+  const [showNotesLoadingError, setShowNotesLoadingError] = useState(false);
+
   const [showAddNoteDialog, setShowAddNoteDialog] = useState(false);
   const [noteToEdit, setNoteToEdit] = useState<NoteModel | null>(null);
 
   useEffect(() => {
     async function loadNotes() {
       try {
+        setShowNotesLoadingError(false);
+        setNotesLoading(true);
         const notes = await NotesApi.fetchNotes();
         setNotes(notes);
       } catch (error) {
         console.error(error);
         alert(error);
+      } finally {
+        setNotesLoading(false);
       }
     }
     loadNotes();
@@ -35,6 +42,21 @@ function App() {
     }
   }
 
+  const notesGrid = (
+    <Row xs={1} md={2} xl={3} className="g-4">
+      {notes.map((note) => (
+        <Col key={note._id}>
+          <Note
+            note={note}
+            className={styles.note}
+            onNoteClicked={(note) => setNoteToEdit(note)}
+            onDeleteNoteClicked={deleteNote}
+          />
+        </Col>
+      ))}
+    </Row>
+  );
+
   return (
     <Container>
       {/* on click we should show up the note form */}
@@ -44,19 +66,18 @@ function App() {
       >
         Add new Note
       </Button>
-      <Row xs={1} md={2} xl={3} className="g-4">
-        {notes.map((note) => (
-          <Col key={note._id}>
-            <Note
-              note={note}
-              className={styles.note}
-              onNoteClicked={(note) => setNoteToEdit(note)}
-              onDeleteNoteClicked={deleteNote}
-            />
-          </Col>
-        ))}
-      </Row>
 
+      {notesloading && (
+        <div className={styleUtils.spinnerContainer}>
+          <Spinner animation="border" variant="primary" />
+        </div>
+      )}
+      {showNotesLoadingError && (
+        <p>Something went wrong. Please refresh the page.</p>
+      )}
+      {!notesloading && !showNotesLoadingError && (
+        <>{notes.length > 0 ? notesGrid : <p>You don't have any notes.</p>}</>
+      )}
       {/* On submit for the note form to dispaaear and add a new note */}
       {showAddNoteDialog && (
         <AddEditNoteDialog
