@@ -235,3 +235,8 @@
     }}
     />
     )}
+
+## B.3 User Authentication
+
+1. npm i bcrypt
+2. npm i -D @types/bcrypt
