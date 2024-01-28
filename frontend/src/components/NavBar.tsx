@@ -2,6 +2,7 @@ import { Container, Nav, Navbar } from 'react-bootstrap';
 import { User } from '../models/user';
 import NavBarLoggedInView from './form/NavBarLoggedinView';
 import NavBarLoggedOutView from './form/NavBarLoggedOutView';
+import { Link } from 'react-router-dom';
 // import { Link } from "react-router-dom";
 
 interface NavBarProps {
@@ -20,10 +21,18 @@ const NavBar = ({
   return (
     <Navbar bg="primary" variant="dark" expand="sm" sticky="top">
       <Container>
-        <Navbar.Brand>EasyWrite App</Navbar.Brand>
+        <Navbar.Brand as={Link} to="/">
+          EasyWrite App
+        </Navbar.Brand>
 
         <Navbar.Toggle aria-controls="main-navbar" />
         <Navbar.Collapse id="main-navbar">
+          <Nav>
+            <Nav.Link as={Link} to="/privacy">
+              Privacy
+            </Nav.Link>
+          </Nav>
+
           <Nav className="ms-auto">
             {loggedInUser ? (
               <NavBarLoggedInView

@@ -7,6 +7,7 @@ import createHttpError, { isHttpError } from 'http-errors';
 import session from 'express-session';
 import env from './util/validateEnv';
 import MongoStore from 'connect-mongo';
+import { requiresAuth } from './middleware/auth';
 
 const app = express();
 
@@ -29,8 +30,9 @@ app.use(
   })
 );
 
+// by adding requiresAuth, no notes will be displayed only if the user is authenticated and has a valid session
 app.use('/api/users', usersRoutes);
-app.use('/api/notes', notesRoutes);
+app.use('/api/notes', requiresAuth, notesRoutes);
 
 // check our server
 app.use((req, res, next) => {

@@ -7,7 +7,7 @@ async function fetchData(input: RequestInfo, init?: RequestInit) {
     return response;
   } else {
     const errorBody = await response.json();
-    const errorMessage = errorBody.error();
+    const errorMessage = errorBody.error;
     throw Error(errorMessage);
   }
 }

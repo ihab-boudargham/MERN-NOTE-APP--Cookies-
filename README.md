@@ -365,3 +365,23 @@ userId: mongoose.Types.ObjectId;
    export async function logout() {
    await fetchData('/api/users/logout', { method: 'POST' });
    }
+
+created, auth router
+fix userControllers
+and add tauth on the routers also
+
+to get the notes of a specific user;
+export const getNotes: RequestHandler = async (req, res, next) => {
+const authenticatedUserId = req.session.userId;
+
+try {
+assertIsDefined(authenticatedUserId)
+
+    const notes = await NoteModel.find({userId: authenticatedUserId}).exec();
+    console.log('Server Response:', notes);
+    res.status(200).json(notes);
+
+} catch (error) {
+next(error);
+}
+};

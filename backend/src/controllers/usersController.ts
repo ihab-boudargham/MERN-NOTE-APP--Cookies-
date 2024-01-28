@@ -5,13 +5,8 @@ import bcrypt from 'bcrypt';
 
 // we get the user data if we are logged in, it diesnt atke any body so we dont need to declare any types
 export const getAuthenticatedUser: RequestHandler = async (req, res, next) => {
-  const authenticatedUserId = req.session.userId;
   try {
-    if (!authenticatedUserId) {
-      throw createHttpError(401, 'User not authenticated');
-    }
-
-    const user = await UserModel.findById(authenticatedUserId)
+    const user = await UserModel.findById(req.session.userId)
       .select('+email')
       .exec();
     res.status(200).json(user);
@@ -46,7 +41,10 @@ export const signUp: RequestHandler<
     }).exec();
 
     if (existingUsername) {
-      throw createHttpError(409, ' Username already taken.');
+      throw createHttpError(
+        409,
+        'Username already taken. Please choose a different one or log in instead.'
+      );
     }
 
     const existingEmail = await UserModel.findOne({ email: email }).exec();
@@ -54,7 +52,7 @@ export const signUp: RequestHandler<
     if (existingEmail) {
       throw createHttpError(
         409,
-        'A user with this email address already exists'
+        'A user with this email address already exists. Please log in instead.'
       );
     }
 
