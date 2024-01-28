@@ -37,7 +37,6 @@ const AddNoteDialog = ({
       } else {
         noteResponse = await NotesApi.createNote(input);
       }
-
       onNoteSaved(noteResponse);
     } catch (error) {
       console.error(error);
