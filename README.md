@@ -119,7 +119,7 @@
         }, []);
 
 3.  We created 2 folders:
-4.  Componenets: Note.tsx, html for the note, useing the interface:
+4.  Componenets: Note.tsx, html for the note, using the interface:
     interface NoteProps {
     note: NoteModel;
     }
@@ -244,3 +244,76 @@
 4. Create usersRoutes.ts
 5. Create UserContoller.ts
 6. in app.ts, app.use('/api/users', usersRoutes);
+
+## B.4 Express Session
+
+1. npm install express-session
+2. npm i -D @types/express-session
+3. We should store ouor sessions somewhere, we will choose Mongodb
+   npm install connect-mongo
+
+4. in app.ts, add after signing up:
+   // store the id of the user that just signed up and send to the neUser Id.
+   // we will create @types and set all our types
+   req.session.userId = newUser.\_id;
+
+5. add in tsconfig.json the following:
+   "ts-node": {
+   "files": true
+   "typeRoots": [
+   "node_modules/@types",
+   "@types"
+   ]
+6. Add in .env:
+   SESSION_SECRET = HHhvJBfVV$hfHbnHi
+7. Update validateEnv.ts:
+   export default cleanEnv(process.env, {
+   MONGO_CONNECTION_STRING: str(),
+   PORT: port(),
+   SESSION_SECRET: str(),
+   });
+8. create a new folder: @types and add the session.d.ts file: (to deefine the type of userId)
+   import mongoose from 'mongoose';
+
+declare module 'express-session' {
+interface SessionData {
+userId: mongoose.Types.ObjectId;
+}
+}
+
+9.  in app.ts:
+    app.use(
+    session({
+    secret: env.SESSION*SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+    maxAge: 60 * 60 \* 1000,
+    },
+    rolling: true,
+    store: MongoStore.create({
+    mongoUrl: env.MONGO_CONNECTION_STRING,
+    }),
+    })
+    );
+
+10. Authentication:
+    As long as the user has a cookie, the user is logged in, once the session is ended, you cant log in, and by deleting the session the user must log out:
+    export const getAuthenticatedUser: RequestHandler = async (req, res, next) => {
+    const authenticatedUserId = req.session.userId;
+    try {
+    if (!authenticatedUserId) {
+    throw createHttpError(401, 'User not authenticated');
+    }
+
+        const user = await UserModel.findById(authenticatedUserId)
+          .select('+email')
+          .exec();
+        res.status(200).json(user);
+
+    } catch (error) {
+    next(error);
+    }
+    };
+
+11. to logoout it is enough to delete the session
